@@ -2,25 +2,44 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    private float _moveSpeed = 20f;
-    private Rigidbody _rigidbody;
-    private Vector3 _moveDirection;
-    
+    private Rigidbody rb;
+    [SerializeField] private float moveForce;
+    [SerializeField] private float jumpForce;
+
+    private bool _isGrounded;
+
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    private void Update()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        
-        _moveDirection = new Vector3(horizontal, 0, vertical);
+        rb = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
     {
-        _rigidbody.AddForce(_moveDirection * _moveSpeed);
+        PlayerMovement();
+        Jump();
+    }
+
+    public void PlayerMovement()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(horizontal, 0, vertical);
+
+        rb.AddForce(movement * moveForce , ForceMode.Force);
+        
+    }
+
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.AddForce(Vector3.up * jumpForce , ForceMode.Impulse);
+        }
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+                               
     }
 }
